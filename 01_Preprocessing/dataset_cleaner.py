@@ -18,9 +18,18 @@ for i in range(0, len(old_files) ):
                     'Insulin', 'BMI', 'DiabetesPedigreeFunction', 'Age']
     
     # Normalizing csv
-    df['DiabetesPedigreeFunction'] = (df['DiabetesPedigreeFunction']-df['DiabetesPedigreeFunction'].min())/(df['DiabetesPedigreeFunction'].max()-df['DiabetesPedigreeFunction'].min())
-    df['Insulin'] = (df['Insulin']-df['Insulin'].min())/(df['Insulin'].max()-df['Insulin'].min())
-    
+
+    #df['DiabetesPedigreeFunction'] = (df['DiabetesPedigreeFunction']-df['DiabetesPedigreeFunction'].min())/(df['DiabetesPedigreeFunction'].max()-df['DiabetesPedigreeFunction'].min())
+    #df['Insulin'] = (df['Insulin']-df['Insulin'].min())/(df['Insulin'].max()-df['Insulin'].min())
+
+    for j, key in enumerate(feature_cols):
+        if key != 'Pregnancies' and key != 'Age':
+            df[key] = (df[key] - df[key].min()) / (
+            df[key].max() - df[key].min())
+
+
+
+
     # Medias
     average = {}
     for key in feature_cols:
