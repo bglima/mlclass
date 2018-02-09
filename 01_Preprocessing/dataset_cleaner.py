@@ -7,10 +7,11 @@ Created on Thu Feb  8 17:49:40 2018
 import numpy as np
 import pandas as pd
 
-csv_files = [ 'old_diabetes_dataset.csv', 'old_diabetes_app.csv' ]
+old_files = [ 'old_diabetes_dataset.csv', 'old_diabetes_app.csv' ]
+new_files = [ 'diabetes_dataset.csv', 'diabetes_app.csv' ]
 
-for file in csv_files:
-    df = pd.read_csv(file)
+for i in range(0, len(old_files) ):
+    df = pd.read_csv(old_files[i])
 
     # carrega os nomes das colunas
     feature_cols = ['Pregnancies', 'Glucose', 'BloodPressure', 'SkinThickness', 
@@ -30,4 +31,4 @@ for file in csv_files:
         df[key] = df[key].replace(np.NaN, average[key])
     
     # Saving CSV
-    df.to_csv(file, index=False, header=True)
+    df.to_csv(new_files[i], index=False, header=True)
