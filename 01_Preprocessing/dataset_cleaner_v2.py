@@ -6,6 +6,7 @@ Created on Thu Feb  8 17:49:40 2018
 """
 import numpy as np
 import pandas as pd
+from pprint import pprint
 
 # Nomes dos arquivos usados. Necessitam estar presentes no workspace em uso.
 old_files = [ 'old_diabetes_dataset.csv', 'old_diabetes_app.csv' ]
@@ -52,18 +53,23 @@ def analyze( dataframe ):
     print('[INFO] Found {} entries. From which..'.format( n_total ))
     print('[INFO] {} people are sick'.format(n_sick))
     print('[INFO] {} people are healthy'.format(n_heal))
-    print('[INFO] AVERAGES for HEALTHY columns: {}'.format(heal_avg))
-    print('[INFO] AVERAGES for SICK columns: {}'.format(sick_avg))
-    print('[INFO] MEDIANS for HEALTHY columns: {}'.format(heal_mdn))
-    print('[INFO] MEDIANS for SICK columns: {}'.format(sick_mdn))    
+    print('\n[INFO] AVERAGES for HEALTHY columns:')
+    pprint(heal_avg)
+    print('\n[INFO] MEDIANS for HEALTHY columns:')
+    pprint(heal_mdn)
+    print('\n[INFO] AVERAGES for SICK columns:')
+    pprint(sick_avg)
+    print('\n[INFO] MEDIANS for SICK columns:')
+    pprint(sick_mdn)
     
-
 # Remove linhas com campos vazios
 def remove_empty( dataframe ) :
     dataframe = dataframe.dropna(axis=0, how='any')
     
 def main():
+    # Carregando o conjunto de treino
     df = df = load_dataset( old_files[0] )
+    # Extraindo dados do conjunto de treino
     analyze( df )    
     
 if __name__ == '__main__':
