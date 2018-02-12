@@ -7,6 +7,7 @@ Created on Thu Feb  8 17:49:40 2018
 import numpy as np
 import pandas as pd
 from pprint import pprint
+from diabetes_csv import test
 
 # Nomes dos arquivos usados. Necessitam estar presentes no workspace em uso.
 old_files = [ 'old_diabetes_dataset.csv', 'old_diabetes_app.csv' ]
@@ -38,8 +39,8 @@ def load_dataset( filename ) :
 def analyze( dataframe ):
     n_total = dataframe.shape[0]
     # Dataset contendo os doentes e os sadios, respectivamente
-    df_sick = dataframe[ dataframe[output_col] == 1 ]
     df_heal = dataframe[ dataframe[output_col] == 0 ]
+    df_sick = dataframe[ dataframe[output_col] == 1 ]
     # Número de pessoas doentes e sadias
     n_sick  = len ( df_sick )
     n_heal  = len ( df_heal )
@@ -62,32 +63,96 @@ def analyze( dataframe ):
     print('\n[INFO] MEDIANS for SICK columns:')
     pprint(sick_mdn)
     
+    return n_total, n_heal, n_sick, heal_avg, heal_mdn, sick_avg, sick_mdn
+    
 # Remove linhas com campos vazios
 def remove_empty( dataframe ) :
-    dataframe = dataframe.dropna(axis=0, how='any')
-    
+    new_dataframe = dataframe.dropna(axis=0, how='any')
+    return new_dataframe
+
+# Preenche campos vazios com um valor específico
+def fill_empty( dataframe, fill_with ):
+    # Dicionário com os nomes das colunas como chave
+    fill_per_col =  pd.Series(fill_with, index=input_cols)  
+    # Copiando e salvando referência para doentes e sadios
+    new_dataframe = dataframe.copy()
+    df_heal = new_dataframe.loc[new_dataframe[output_col] == 0]
+    df_sick = new_dataframe.loc[new_dataframe[output_col] == 1]
+
+    # Para cada parâmetro na lista, idtendifique o tipo
+    for key in input_cols:
+        # Preencha todos os campos nulos da coluna com 0
+        if fill_per_col[ key ] == 'zero':
+            new_dataframe[ key ].fillna( 0, inplace=True )
+        # Preencha todos os campos nulos da coluna pela média do respectivo Outcome
+        elif fill_per_col[ key ] == 'avg':
+            new_dataframe.loc[ new_dataframe[output_col] == 0, key ] = df_heal[ key ].fillna( heal_avg[ key ] ) 
+            new_dataframe.loc[ new_dataframe[output_col] == 1, key ] = df_sick[ key ].fillna( sick_avg[ key ] ) 
+        elif fill_per_col[ key ] == 'mdn':
+            new_dataframe.loc[ new_dataframe[output_col] == 0, key ] = df_heal[ key ].fillna( heal_mdn[ key ] ) 
+            new_dataframe.loc[ new_dataframe[output_col] == 1, key ] = df_sick[ key ].fillna( sick_mdn[ key ] ) 
+    return new_dataframe
+
+# Define o número de casas decimais para cada coluna do dataframe
+def round_values( dataframe, decimal_places ) :
+    places_per_col = pd.Series(decimal_places, index=input_cols)
+    new_dataframe = dataframe.round(places_per_col)    
+    return new_dataframe
+
+# Normaliza os valores através de uma função específica.
+def normalize( dataframe, normalize_with):
+    # Copiando dataframe
+    new_dataframe = dataframe.copy()
+    # Dicionário com os nomes das colunas como chave
+    norm_per_col =  pd.Series(normalize_with, index=input_cols)  
+    # Para cada parâmetro na lista, idtendifique o tipo
+    for key in input_cols:
+        # Preencha todos os campos nulos da coluna com 0
+        if  norm_per_col[ key ] == 'mmx':
+            new_dataframe[ key ] = ( new_dataframe[key] - new_dataframe[key].min())/(new_dataframe[key].max()-new_dataframe[key].min())   
+        elif norm_per_col[ key ] == 'std':
+            new_dataframe[ key ] = ( new_dataframe[key] - new_dataframe[key].mean())/new_dataframe[key].std()
+    return new_dataframe
+
+# Atribui peso a colunas específicas
+def set_weights( dataframe, weight_with ):
+    # Copiando dataframe
+    new_dataframe = dataframe.copy()
+    # Dicionário com os nomes das colunas como chave
+    weight_per_col =  pd.Series(weight_with, index=input_cols)
+    # Para cada parâmetro na lista, idtendifique o tipo
+    for key in input_cols:
+        new_dataframe[ key ] = new_dataframe[key] * float( weight_per_col[key] )
+    return new_dataframe    
+
 def main():
-    # Carregando o conjunto de treino
-    df = df = load_dataset( old_files[0] )
+    # =====> CONJUNTO DE TREINO <=====
+    train_df = load_dataset( old_files[0] )
     # Extraindo dados do conjunto de treino
-    analyze( df )    
+    n_total, n_heal, n_sick, heal_avg, heal_mdn, sick_avg, sick_mdn = analyze( train_df )    
+    # Preenchendo os campos vazios
+    train_df = fill_empty(train_df,   ['mdn', 'avg', 'mdn', 'avg', 'mdn', 'avg', 'mdn', 'mdn'] )
     
+    # =====> CONJUNTO DE TESTES <=====
+    test_df = load_dataset( old_files[1] )
+    
+    # ======> OPERAÇÕES EM AMBOS <=====
+    df_list = [train_df, test_df]
+    for i in range(0, 2):
+        # Normalizando os valores
+        df_list[i] = normalize(df_list[i],    ['mmx', 'mmx', 'mmx', 'mmx', 'mmx', 'mmx', 'mmx', 'mmx'] )
+        # Normalizando os valores
+        df_list[i] = set_weights(df_list[i],  [1.0, 1.0, 1.0, 1.0, 0.9, 1.0, 3.0, 0.9] )
+        # Arredonando as casas decimais
+        df_list[i] = round_values(df_list[i], [ 3,   3,   3,   3,   3,   3,   3,   3] )  
+        # Salvando o CSV
+        df_list[i].to_csv(new_files[i], index=False, header=True)         
+     
 if __name__ == '__main__':
     main()
-        
-#    # Rounding values
-#    decimal_places = [ 0, 1, 1, 1, 1, 1, 3, 0 ]
-#    places_per_col = pd.Series(decimal_places, index=feature_cols)
-#    df = df.round(places_per_col)
+    test()
 #    
-#    # Normalizing through MinMax
-#    normalize_minmax = []
-#    for features in normalize_minmax:
-#        df[features] = (df[features]-df[features].min())/(df[features].max()-df[features].min())   
-#    # Normalizing through Standard Deviation
-#    normalize_mean = feature_cols
-#    for features in normalize_mean:  
-#        df[features] = (df[features]-df[features].mean())/df[features].std()
+
 #    
 #    # Discarding some columns
 #    features_to_discard = ['SkinThickness']
