@@ -14,11 +14,11 @@ from sklearn.neighbors import KNeighborsClassifier
 import requests
 
 def test():
-    print('\n - Lendo o arquivo com o dataset sobre diabetes')
+#    print('\n - Lendo o arquivo com o dataset sobre diabetes')
     data = pd.read_csv('diabetes_dataset.csv')
     
     # Criando X and y par ao algorítmo de aprendizagem de máquina.\
-    print(' - Criando X e y para o algoritmo de aprendizagem a partir do arquivo diabetes_dataset')
+#    print(' - Criando X e y para o algoritmo de aprendizagem a partir do arquivo diabetes_dataset')
     # Caso queira modificar as colunas consideradas basta algera o array a seguir.
     feature_cols = ['Pregnancies', 'Glucose', 'BloodPressure', 'SkinThickness', 
                     'Insulin', 'BMI', 'DiabetesPedigreeFunction', 'Age']
@@ -26,12 +26,12 @@ def test():
     y = data.Outcome
     
     # Ciando o modelo preditivo para a base trabalhada
-    print(' - Criando modelo preditivo')
+#    print(' - Criando modelo preditivo')
     neigh = KNeighborsClassifier(n_neighbors=3)
     neigh.fit(X, y)
     
     #realizando previsões com o arquivo de
-    print(' - Aplicando modelo e enviando para o servidor')
+#    print(' - Aplicando modelo e enviando para o servidor')
     data_app = pd.read_csv('diabetes_app.csv')
     y_pred = neigh.predict(data_app)
     
@@ -49,8 +49,9 @@ def test():
     r = requests.post(url = URL, data = data)
     
     # Extraindo e imprimindo o texto da resposta
-    pastebin_url = r.text
-    print(" - Resposta do servidor:\n", r.text, "\n")
-    
+#    pastebin_url = r.text
+#    print(" - Resposta do servidor:\n", r.text, "\n")
+    return r.json().get('accuracy')    
+      
 if __name__ == '__main__':
     test()
