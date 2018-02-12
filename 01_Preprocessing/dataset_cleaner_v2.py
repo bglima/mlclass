@@ -8,6 +8,7 @@ import numpy as np
 import pandas as pd
 from pprint import pprint
 from diabetes_csv import test
+from time import sleep
 
 # Nomes dos arquivos usados. Necessitam estar presentes no workspace em uso.
 old_files = [ 'old_diabetes_dataset.csv', 'old_diabetes_app.csv' ]
@@ -30,7 +31,7 @@ sick_mdn = {} # Dicionario com as medianas dos campos dos doentes
 
 # Carrega o dataset contido num 
 def load_dataset( filename ) :
-    print ('[INFO] Loading {} ...'.format(filename))
+#    print ('[INFO] Loading {} ...'.format(filename))
     dataframe = pd.read_csv( filename )
     return dataframe
 
@@ -51,17 +52,17 @@ def analyze( dataframe ):
         heal_mdn[ key ] = df_heal[ key ].median()
         sick_mdn[ key ] = df_sick[ key ].median()
     # Log das infos obtidas
-    print('[INFO] Found {} entries. From which..'.format( n_total ))
-    print('[INFO] {} people are sick'.format(n_sick))
-    print('[INFO] {} people are healthy'.format(n_heal))
-    print('\n[INFO] AVERAGES for HEALTHY columns:')
-    pprint(heal_avg)
-    print('\n[INFO] MEDIANS for HEALTHY columns:')
-    pprint(heal_mdn)
-    print('\n[INFO] AVERAGES for SICK columns:')
-    pprint(sick_avg)
-    print('\n[INFO] MEDIANS for SICK columns:')
-    pprint(sick_mdn)
+#    print('[INFO] Found {} entries. From which..'.format( n_total ))
+#    print('[INFO] {} people are sick'.format(n_sick))
+#    print('[INFO] {} people are healthy'.format(n_heal))
+#    print('\n[INFO] AVERAGES for HEALTHY columns:')
+#    pprint(heal_avg)
+#    print('\n[INFO] MEDIANS for HEALTHY columns:')
+#    pprint(heal_mdn)
+#    print('\n[INFO] AVERAGES for SICK columns:')
+#    pprint(sick_avg)
+#    print('\n[INFO] MEDIANS for SICK columns:')
+#    pprint(sick_mdn)
     
     return n_total, n_heal, n_sick, heal_avg, heal_mdn, sick_avg, sick_mdn
     
@@ -136,13 +137,16 @@ def discard_cols( dataframe, discard_with ):
         if discard_per_col[ key ]: new_dataframe[ key ] = 1
     return new_dataframe  
 
-def main():
+def step( weights ):
     # =====> CONJUNTO DE TREINO <=====
     train_df = load_dataset( old_files[0] )
     # Extraindo dados do conjunto de treino
     n_total, n_heal, n_sick, heal_avg, heal_mdn, sick_avg, sick_mdn = analyze( train_df )    
-    # Preenchendo os campos vazios
-    train_df = fill_empty(train_df,   ['mdn', 'avg', 'mdn', 'avg', 'mdn', 'avg', 'mdn', 'mdn'] )
+    # Removendo campos vazios -- ANULA O FILL-EMPTY
+    train_df = remove_empty(train_df)
+    # Preenchendo os campos vazios -- APENAS SE remove_empty NÃO FOR USADO
+    train_df = fill_empty(train_df,   ['avg', 'avg', 'avg', 'avg', 'avg', 'avg', 'avg', 'avg'] )
+    
     
     # =====> CONJUNTO DE TESTES <=====
     test_df = load_dataset( old_files[1] )
@@ -153,29 +157,54 @@ def main():
         # Normalizando os valores
         df_list[i] = normalize(df_list[i],    ['mmx', 'mmx', 'mmx', 'mmx', 'mmx', 'mmx', 'mmx', 'mmx'] )
         # Discartando algumas colunas. 0 significa manter.
-        df_list[i] = discard_cols(df_list[i],    [0, 0, 0, 0, 0, 0, 0, 0] )
+        df_list[i] = discard_cols(df_list[i],    [0, 0, 0, 0, 0, 0, 0, 1] )
         # Setando pesos
-        df_list[i] = set_weights(df_list[i],  [1.0, 1.0, 1.0, 0.3, 0.9, 1.0, 3.0, 0.9] )
+        df_list[i] = set_weights(df_list[i],  weights)
         # Arredonando as casas decimais
         df_list[i] = round_values(df_list[i], [ 3,   3,   3,   3,   3,   3,   3,   3] )  
         # Salvando o CSV
         df_list[i].to_csv(new_files[i], index=False, header=True)         
      
-if __name__ == '__main__':
-    main()
-    test()
- 
+    return test()
 
-#    
-#    # Discarding some columns
-#    features_to_discard = ['SkinThickness']
-#    for features in features_to_discard:
-#        df[features] = 1                                                                                                                                                                        
-#
-#    # Binarizing values
-#    features_to_binarize = []
-#    for features in features_to_binarize:
-#        df[features] = (df[features] > 1).astype(int) 
-#    
-#    # Saving CSV
-#    df.to_csv(new_files[i], index=False, header=True)
+        
+if __name__ == '__main__':
+    weights = [ 7.96,  9.73,  2.13, 14.47, -0.2,   2.18,  2.34,  1.5 ]
+# Max prec from [ 7.96  9.73  2.13 14.47 -0.2   2.18  2.34  1.5 ] with 0.82142857142857 discarding 8 e removendo vazios
+# Max prec from [ 4.07 10.95  4.25  9.84  4.26  3.34  6.74  4.61] with 0.81632653061224 discarding nothing e removendo vazios
+# Max prec from [ 4.06 10.95  4.18  9.74  4.41  3.49  6.48  4.56] with 0.81632653061224 discarding nothing e removendo vazios
+# Max prec from [ 3.19 10.46  3.8   9.37  3.75  3.22  5.78  4.25] with 0.81122448979592 discarding nothing e removendo vazios
+# Max prec from [2.05 9.28 3.   8.13 2.89 2.3  4.54 4.09] with 0.81122448979592 discarding 6 and 8    
+# Max prec from [4.72 7.55 2.6  7.7  1.87 4.85 2.74 1.1 ] with 0.80102040816327 doscardomg 8    
+# Max prec from [1.75 6.96 1.76 6.65 1.61 2.69 2.11 1.01] with 0.80102040816327 discarding 8
+# Max prec from [2.37 6.39 1.77 7.53 4.81 2.13 3.83 4.51] with 0.79591836734694 discading nothing    
+# Max prec from [5.84 6.45 2.12 1.68 1.21 5.49 4.73 2.86] with 0.81632653061224 discarding 4, 6 and 8
+# Max prec from [5.99 6.52 2.25 0.78 1.2  5.14 4.84 2.33] with 0.81122448979592 discarding 4, 6 and 8
+# Max prec from [5.08 5.94 1.77 1.41 0.92 5.25 4.43 2.63] with 0.81122448979592 discarding 4, 6 and 8
+# Max prec from [5.03 5.27 1.49 0.76 0.35 5.16 3.55 2.44] with 0.80612244897959 discarding 6 and 8
+# Max prec from [4.98 4.61 1.92 0.72 0.6  5.51 2.98 2.81] with 0.79081632653061 discarding 6 and 8
+# Acc for [4.31 3.78 1.45 0.66 0.35 4.62 2.69 2.31] is 0.79081632653061 discarding 6 and 8
+# Acc for [1.64 3.51 1.55 3.98 2.54 1.71 2.11 2.32] is 0.79591836734694 
+# Acc for [1.05 1.06 1.1  1.08 1.04 1.06 1.   1.04] is 0.79081632653061    
+# Acc for [1.0, 1.0, 1.0, 0.3, 0.9, 1.0, 3.0, 0.9] is: 0.78
+# Acc for [1.62 3.49 1.49 3.92 2.45 1.68 2.08 2.29] is: 0.79
+# Acc for [1.14 1.6  1.37 0.05 1.11 1.28 3.72 1.44] is: 0.78061224489796
+    max_prec = 0
+    max_weight = []
+    for i in range (0, 80):
+        max_rand = 10.0
+        thresh = (np.random.rand(8) * max_rand) - max_rand / 2.0
+        thresh = np.round(thresh, 2)
+        
+        new_weights = weights + thresh
+        
+        curr_prec = step(new_weights)
+        curr_loss = 1 - curr_prec
+        
+        if curr_prec > max_prec: 
+            max_prec = curr_prec
+            max_weight = new_weights
+        
+        print('Acc for {} is {}'.format(new_weights, curr_prec))
+    
+    print('\nMax prec from {} with {}'.format(max_weight, max_prec))
