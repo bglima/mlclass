@@ -125,6 +125,17 @@ def set_weights( dataframe, weight_with ):
         new_dataframe[ key ] = new_dataframe[key] * float( weight_per_col[key] )
     return new_dataframe    
 
+# Discarta o valor de certas colunas
+def discard_cols( dataframe, discard_with ):
+    # Copiando dataframe
+    new_dataframe = dataframe.copy()
+    # Dicionário com os nomes das colunas como chave
+    discard_per_col =  pd.Series(discard_with, index=input_cols)
+    # Para cada parâmetro na lista, idtendifique o tipo
+    for key in input_cols:
+        if discard_per_col[ key ]: new_dataframe[ key ] = 1
+    return new_dataframe  
+
 def main():
     # =====> CONJUNTO DE TREINO <=====
     train_df = load_dataset( old_files[0] )
@@ -141,8 +152,10 @@ def main():
     for i in range(0, 2):
         # Normalizando os valores
         df_list[i] = normalize(df_list[i],    ['mmx', 'mmx', 'mmx', 'mmx', 'mmx', 'mmx', 'mmx', 'mmx'] )
-        # Normalizando os valores
-        df_list[i] = set_weights(df_list[i],  [1.0, 1.0, 1.0, 1.0, 0.9, 1.0, 3.0, 0.9] )
+        # Discartando algumas colunas. 0 significa manter.
+        df_list[i] = discard_cols(df_list[i],    [0, 0, 0, 0, 0, 0, 0, 0] )
+        # Setando pesos
+        df_list[i] = set_weights(df_list[i],  [1.0, 1.0, 1.0, 0.3, 0.9, 1.0, 3.0, 0.9] )
         # Arredonando as casas decimais
         df_list[i] = round_values(df_list[i], [ 3,   3,   3,   3,   3,   3,   3,   3] )  
         # Salvando o CSV
@@ -151,7 +164,7 @@ def main():
 if __name__ == '__main__':
     main()
     test()
-#    
+ 
 
 #    
 #    # Discarding some columns
