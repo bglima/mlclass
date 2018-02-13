@@ -145,7 +145,7 @@ def step( weights ):
     # Removendo campos vazios -- ANULA O FILL-EMPTY
     train_df = remove_empty(train_df)
     # Preenchendo os campos vazios -- APENAS SE remove_empty NÃO FOR USADO
-    train_df = fill_empty(train_df,   ['avg', 'avg', 'avg', 'avg', 'avg', 'avg', 'avg', 'avg'] )
+    # train_df = fill_empty(train_df,   ['avg', 'avg', 'avg', 'avg', 'avg', 'avg', 'avg', 'avg'] )
     
     
     # =====> CONJUNTO DE TESTES <=====
@@ -169,7 +169,18 @@ def step( weights ):
 
         
 if __name__ == '__main__':
-    weights = [ 7.96,  9.73,  2.13, 14.47, -0.2,   2.18,  2.34,  1.5 ]
+    weights = [ 8.08,  7.03, -1.33, 10.47,  1.39, -0.34, -0.86,  4.11]
+# =========>    weights = [ 8.08,  7.03, -1.33, 10.47,  1.39, -0.34, -0.86,  4.11]
+# =========>    weights = [ 7.96,  9.73,  2.13, 14.47, -0.2,   2.18,  2.34,  1.5 ]
+# 
+# Max prec from [ 8.08  7.03 -1.33 10.47  1.39 -0.34 -0.86  4.11] with 0.86734693877551 discarding 8 e removendo vazios
+# Max prec from [ 8.63  7.09 -1.57 10.93  1.12 -0.56 -0.99  4.29] with 0.85714285714286 discarding 8 e removendo vazios
+# Max prec from [ 8.62  7.81 -0.7  12.43  0.17  3.24 -0.74  4.24] with 0.85204081632653 discarding 8 e removendo vazios
+# Max prec from [ 6.47  5.65  0.08  8.82  0.65 -0.23 -1.01  0.75] with 0.85204081632653 discarding 8 e removendo vazios
+# Max prec from [ 8.23  7.12 -1.71 10.38  0.08  2.01 -0.6   1.88] with 0.8469387755102 discarding 8 e removendo vazios
+# Max prec from [10.92  8.05  1.37 12.   -0.96  0.15  4.87  1.05] with 0.84183673469388 discarding 8 e removendo vazios
+# Max prec from [10.42  9.45  0.82 16.85  0.38 -1.4  -0.85 -1.79] with 0.84183673469388 discarding 8 e removendo vazios
+# Max prec from [11.79  9.16 -2.06 12.53 -1.29  0.3  -0.51 -0.43] with 0.83163265306122 discarding 8 e removendo vazios
 # Max prec from [ 7.96  9.73  2.13 14.47 -0.2   2.18  2.34  1.5 ] with 0.82142857142857 discarding 8 e removendo vazios
 # Max prec from [ 4.07 10.95  4.25  9.84  4.26  3.34  6.74  4.61] with 0.81632653061224 discarding nothing e removendo vazios
 # Max prec from [ 4.06 10.95  4.18  9.74  4.41  3.49  6.48  4.56] with 0.81632653061224 discarding nothing e removendo vazios
@@ -189,10 +200,14 @@ if __name__ == '__main__':
 # Acc for [1.0, 1.0, 1.0, 0.3, 0.9, 1.0, 3.0, 0.9] is: 0.78
 # Acc for [1.62 3.49 1.49 3.92 2.45 1.68 2.08 2.29] is: 0.79
 # Acc for [1.14 1.6  1.37 0.05 1.11 1.28 3.72 1.44] is: 0.78061224489796
+   
     max_prec = 0
     max_weight = []
+    curr_prec = step(weights)
+    print('Acc for {} w/o thresh: {}'.format(weights, curr_prec))
+    
     for i in range (0, 80):
-        max_rand = 10.0
+        max_rand = 1.0
         thresh = (np.random.rand(8) * max_rand) - max_rand / 2.0
         thresh = np.round(thresh, 2)
         
