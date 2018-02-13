@@ -29,7 +29,7 @@ print(' - Criando modelo preditivo')
 neigh = KNeighborsClassifier(n_neighbors=3)
 neigh.fit(X, y)
 
-#realizando previsões com o arquivo de
+# realizando previsões com o arquivo de
 print(' - Aplicando modelo e enviando para o servidor')
 data_app = pd.read_csv('diabetes_app.csv')
 y_pred = neigh.predict(data_app)
