@@ -152,9 +152,9 @@ def step( weights ):
     # Extraindo dados do conjunto de treino
     n_total, n_heal, n_sick, heal_avg, heal_mdn, heal_std, sick_avg, sick_mdn, sick_std = analyze( train_df )    
     # Removendo campos vazios -- ANULA O FILL-EMPTY
-    #train_df = remove_empty(train_df)
+    train_df = remove_empty(train_df)
     # Preenchendo os campos vazios -- APENAS SE remove_empty NÃO FOR USADO
-    train_df = fill_empty(train_df,   ['avg', 'avg', 'avg', 'avg', 'avg', 'avg', 'avg', 'avg'] )
+    #train_df = fill_empty(train_df,   ['avg', 'avg', 'avg', 'avg', 'avg', 'avg', 'avg', 'avg'] )
     
     
     # =====> CONJUNTO DE TESTES <=====
@@ -166,7 +166,7 @@ def step( weights ):
         # Normalizando os valores
         df_list[i] = normalize(df_list[i],    ['mmx', 'mmx', 'mmx', 'mmx', 'mmx', 'mmx', 'mmx', 'mmx'] )
         # Discartando algumas colunas. 0 significa manter.
-        df_list[i] = discard_cols(df_list[i],    [1, 0, 0, 0, 0, 0, 0, 1] )
+        df_list[i] = discard_cols(df_list[i],    [0, 0, 0, 0, 0, 0, 0, 1] )
         # Setando pesos
         df_list[i] = set_weights(df_list[i],  weights)
         # Arredonando as casas decimais
@@ -176,11 +176,9 @@ def step( weights ):
      
     return test()
 
-        
-if __name__ == '__main__':
-    weights = [ 6.6,   2.35,  5.99 , 0.75,  2.99 ,-7.18 , 8.68, -4.83]
-# # Norma minmax, discartando 1 e 8, substituindo vazios pela média, arredondando com 5 dp
-# Max prec from [ 6.6   2.35  5.99  0.75  2.99 -7.18  8.68 -4.83] with 0.78061224489796    
+
+def main():
+    weights = [ 8.08 , 7.03, -1.33, 10.47,  1.39, -0.34, -0.86,  4.11]
 
     max_prec = 0
     max_weight = []
@@ -188,7 +186,7 @@ if __name__ == '__main__':
     print('Acc for {} w/o thresh: {}'.format(weights, curr_prec))
     
     for i in range (0, 150):
-        max_rand = 10    
+        max_rand = 0.1    
         thresh = (np.random.rand(8) * max_rand) - max_rand / 2.0
         thresh = np.round(thresh, 2)
         
@@ -203,4 +201,7 @@ if __name__ == '__main__':
         
         print('Acc for {} is {}'.format(new_weights, curr_prec))
     
-    print('\nMax prec from {} with {}'.format(max_weight, max_prec))
+    print('\nMax prec from {} with {}'.format(max_weight, max_prec))            
+
+if __name__ == '__main__':
+    main()
