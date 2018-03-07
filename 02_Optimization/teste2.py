@@ -31,8 +31,9 @@ def saveMaxAngle(max_angle, max_prec):
     f.write('Max prec from {} with {}. Result obtained on {}'.format(max_angle, max_prec,time.strftime("%H:%M:%S")))
 
 
-#angles = [10,180,242,315,180,155]
-angles = [90,90,90,90,90,90]
+#angles = np.array([10,180,242,315,180,155])
+angles =  np.array([90,90,90,90,90,90])
+
 
 initial_angles = angles
 prev_prec = 0
@@ -53,21 +54,25 @@ try:
         # Risk of falling into a local minimum
         if curr_prec > 15:
             max_rand = 3
-            
+                        
             # checks if the derivate is positive
             if (curr_prec - prev_prec) > 0.5:
                 angles += thresh
+
             else:
                 max_rand = 12
     
+
             
         thresh = (np.random.rand(6) * max_rand) - max_rand / 3
         thresh = thresh.astype(int)
-        
+    
         #print("thresh: {}".format(thresh))
         
         new_angles = np.array([])
         new_angles = angles + thresh
+        new_angles = new_angles.astype(int)
+        
         
         prev_prec = curr_prec
         curr_prec = step(new_angles)
