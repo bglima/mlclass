@@ -1,7 +1,9 @@
 '''
 Created on 6 de mar de 2018
 
-@author: JoãoPaulo
+@authors: Bruno Lima
+          João Paulo
+          Nilson Sales
 '''
 
 import numpy as np
