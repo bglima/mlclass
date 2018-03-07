@@ -7,6 +7,7 @@ Created on Thu Feb  8 17:49:40 2018
 import numpy as np
 import pandas as pd
 
+
 old_files = [ 'old_diabetes_dataset.csv', 'old_diabetes_app.csv' ]
 new_files = [ 'diabetes_dataset.csv', 'diabetes_app.csv' ]
 

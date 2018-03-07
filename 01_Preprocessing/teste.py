@@ -5,10 +5,12 @@ Created on Fri Feb  9 17:03:57 2018
 @author: brunolima
 """
 
+from time import sleep
+
+from diabetes_csv import vai
 import numpy as np
 import pandas as pd
-from diabetes_csv import vai
-from time import sleep
+
 
 old_files = [ 'old_diabetes_dataset.csv', 'old_diabetes_app.csv' ]
 new_files = [ 'diabetes_dataset.csv', 'diabetes_app.csv' ]

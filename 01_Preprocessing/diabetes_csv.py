@@ -9,9 +9,11 @@ no servidor.
 @author: Aydano Machado <aydano.machado@gmail.com>
 """
 
-import pandas as pd
-from sklearn.neighbors import KNeighborsClassifier
 import requests
+from sklearn.neighbors import KNeighborsClassifier
+
+import pandas as pd
+
 
 def test():
 #    print('\n - Lendo o arquivo com o dataset sobre diabetes')
