@@ -46,6 +46,7 @@ max_angle = []
 curr_prec = step(angles)
 print('Acc for {} w/o thresh: {}'.format(angles, curr_prec))
 
+
 while(True):
     max_rand = 30
     thresh = (np.random.rand(6) * max_rand) - max_rand / 2.0
