@@ -1,7 +1,9 @@
 '''
 Created on 6 de mar de 2018
 
-@author: JoãoPaulo
+@authors: Bruno Lima
+          João Paulo
+          Nilson Sales
 '''
 
 import numpy as np
@@ -39,26 +41,43 @@ def saveMaxAngle(max_angle, max_prec):
 def createDict(max_angle, max_prec):
     return {'phi1':int(max_angle[0]),'theta1':int(max_angle[1]),'phi2':int(max_angle[2]),'theta2':int(max_angle[3]),'phi3':int(max_angle[4]),'theta3':int(max_angle[5]), 'max_prec':float(max_prec)}
     
-angles = [10,180,242,315,180,155]
+angles = np.array([90,90,90,90,90,90])
+
+
 
 max_prec = 0
+prev_prec = 0
 max_angle = []
 curr_prec = step(angles)
 print('Acc for {} w/o thresh: {}'.format(angles, curr_prec))
-
+thresh = [0, 0, 0, 0, 0, 0]
 
 while(True):
-    max_rand = 30
-    thresh = (np.random.rand(6) * max_rand) - max_rand / 2.0
-    thresh = np.round(thresh, 2)
+    max_rand = 265
+    
+    # Try near combination of values if the precision is high
+    # Risk of falling into a local minimum
+    if curr_prec > 15:
+        max_rand = 3
+                    
+        # checks if the derivate is positive
+        if (curr_prec - prev_prec) > 0.5:
+            angles += thresh
+
+        else:
+            max_rand = 12
+                
+    thresh = (np.random.rand(6) * max_rand) - max_rand / 3
+    thresh = thresh.astype(int)
     
     new_angles = np.array([])
     new_angles = angles + thresh
     new_angles = new_angles.astype(int)        
     
-    np.place(new_angles, new_angles < 0, new_angles+abs(new_angles))
-    np.place(new_angles, new_angles >= 360, new_angles-abs(new_angles))
+    np.place(new_angles, new_angles < 0, angles)
+    np.place(new_angles, new_angles >= 360, angles)
     
+    prev_prec = curr_prec
     curr_prec = step(new_angles)
     curr_loss = 1 - curr_prec
     
