@@ -4,11 +4,13 @@ Created on Thu Feb  8 17:49:40 2018
 
 @author: brunolima
 """
+from pprint import pprint
+from time import sleep
+
+from diabetes_csv import test
 import numpy as np
 import pandas as pd
-from pprint import pprint
-from diabetes_csv import test
-from time import sleep
+
 
 # Nomes dos arquivos usados. Necessitam estar presentes no workspace em uso.
 old_files = [ 'old_diabetes_dataset.csv', 'old_diabetes_app.csv' ]
