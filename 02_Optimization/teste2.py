@@ -47,7 +47,7 @@ try:
     while(True):
         in_range = True
          
-        max_rand = 180
+        max_rand = 265
         
         # Try near combination of values if the precision is high
         # Risk of falling into a local minimum
@@ -62,11 +62,12 @@ try:
     
             
         thresh = (np.random.rand(6) * max_rand) - max_rand / 3
-        #thresh = np.round(thresh, 2)
+        thresh = thresh.astype(int)
+        
+        #print("thresh: {}".format(thresh))
         
         new_angles = np.array([])
         new_angles = angles + thresh
-        new_angles = new_angles.astype(int)
         
         prev_prec = curr_prec
         curr_prec = step(new_angles)
