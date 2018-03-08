@@ -25,14 +25,16 @@ def saveMaxAngle(max_angle, max_gain):
     dirname = os.path.dirname(os.path.abspath(__file__))
     filename = os.path.join(dirname, 'max.json')
 
+
     d = createDict(max_angle, max_gain)
+
     if not (os.path.exists(filename)):
         print('Diretório nao existente!')
-        json.dump(d,open(filename, 'w'))
+        json.dump(d, open(filename, 'w'))
     else:
         old_d = json.load(open(filename))
-        if float(d.get('max_gain')) > float(old_d.get('max_gain')):
-            json.dump(d,open(filename, 'w'))
+        if old_d.get('max_gain') and (float(d.get('max_gain')) >= float(old_d.get('max_gain'))):
+            json.dump(d, open(filename, 'w'))
             print('Máximo absoluto encontrado!')
         else:
             print('O tamanho máximo dessa rodada não é o máximo absoluto.\nMáximo absoluto: {}'.format(old_d.get('max_gain')))
@@ -46,7 +48,7 @@ angles = np.random.randint(thresh_interval_array[0], size=6)
 max_gain = 0
 prev_gain = 0
 new_angles = np.array([])
-max_angle = np.array([])
+max_angle = np.zeros((6,), dtype=np.int) #np.array([])
 curr_gain = step(angles)
 print('Acc for {} w/o thresh: {}'.format(angles, curr_gain))
 thresh = [0, 0, 0, 0, 0, 0]
@@ -70,7 +72,7 @@ thresh = [0, 0, 0, 0, 0, 0]
 
 for thresh_interval in thresh_interval_array:
 
-    for i in range(1500):
+    for i in range(1000):
         # Try near combination of values if the precision is high
         # Risk of falling into a local minimum
         thresh = np.random.randint(thresh_interval, size=6) - int(thresh_interval / 2)
@@ -95,3 +97,5 @@ for thresh_interval in thresh_interval_array:
 
     print('\nMax prec from [{}, {}, {}, {}, {}, {}] with {}'.format(max_angle[0], max_angle[1], max_angle[2],max_angle[3],max_angle[4],max_angle[5], max_gain))
     angles = max_angle
+
+saveMaxAngle(max_angle, max_gain)
