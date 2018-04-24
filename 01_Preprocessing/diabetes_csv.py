@@ -36,6 +36,8 @@ def test():
 #    print(' - Aplicando modelo e enviando para o servidor')
     data_app = pd.read_csv('diabetes_app.csv')
     y_pred = neigh.predict(data_app)
+    print(y_pred)
+    #%%
     
     # Enviando previsões realizadas com o modelo para o servidor
     URL = "http://aydanomachado.com/mlclass/01_Preprocessing.php"
