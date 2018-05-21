@@ -27,11 +27,10 @@ def do_not_change(n_doors, trials):  # Caso o jogador não troque a porta
                                                                                               success / trials))
 
 
-
-
 def do_change(n_doors, trials): # Caso o jogador troque a porta
     rating = 0
     success = 0
+    
     for i in range(1, trials):
 
         correct_door = rand.randint(1, n_doors)
