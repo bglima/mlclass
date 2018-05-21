@@ -30,7 +30,7 @@ def do_not_change(n_doors, trials):  # Caso o jogador não troque a porta
 def do_change(n_doors, trials): # Caso o jogador troque a porta
     rating = 0
     success = 0
-    
+
     for i in range(1, trials):
 
         correct_door = rand.randint(1, n_doors)
@@ -40,16 +40,16 @@ def do_change(n_doors, trials): # Caso o jogador troque a porta
         other_doors = list(range(1, n_doors+1))
         other_doors.remove(player_door)
 
-        # Procura uma porta vazia pra abrir
-        door_to_open = rand.choice(other_doors)
-
-        if door_to_open == correct_door:
-            door_to_open = sum(other_doors) - door_to_open
-
-        other_doors.remove(door_to_open)
+        # Abre outra(s) porta(s) e deixa uma fechada
+        # Se a porta do jogador for a correta, escolha uma porta aleatória pra trocar
+        if player_door == correct_door:
+            keep_closed = rand.choice(other_doors)
+        # Se não, abre todas e deixa a correta
+        else:
+            keep_closed = correct_door
 
         # Troca a escolha
-        player_door = other_doors[0]
+        player_door = keep_closed
 
         if (correct_door == player_door):  # Caso o a porta do jogador seja a correta
             rating += 2  # houve sucesso
@@ -62,7 +62,7 @@ def do_change(n_doors, trials): # Caso o jogador troque a porta
 
 
 n_doors = 3  # número de portas
-trials = 100000  # número de tentativas
+trials = 10000  # número de tentativas
 
 do_not_change(n_doors, trials)
 
