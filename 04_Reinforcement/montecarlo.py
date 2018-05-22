@@ -3,7 +3,7 @@ Created on 21 de mai de 2018
 
 Objetivo: Provar a solução do problema de Monty Hall utilizando Monte Carlo
 
-@authors: Bruno Lima
+@authors: Bruno Gabriel Lima
           João Paulo Clarindo
           Nilson Sales
 '''
@@ -14,7 +14,7 @@ import matplotlib.pyplot as plt
 
 
 def plot(y, img_name):
-    fig = plt.figure()
+    fig = plt.figure(n)
     plt.plot(y)
     plt.ylabel('Success rate')
     plt.xlabel('Iterations')
@@ -55,7 +55,7 @@ def do_change(n_doors, trials): # Caso o jogador troque a porta
         other_doors.remove(player_door)
 
         # Abre outra(s) porta(s) e deixa uma fechada
-        # Se a porta do jogador for a correta, escolha uma porta aleatória pra trocar
+        # Se a porta do jogador for a correta, oferece uma porta aleatória pra trocar
         if player_door == correct_door:
             keep_closed = rand.choice(other_doors)
         # Se não, abre todas e deixa a correta
@@ -65,7 +65,7 @@ def do_change(n_doors, trials): # Caso o jogador troque a porta
         # Troca a escolha
         player_door = keep_closed
 
-        if (correct_door == player_door):  # Caso o a porta do jogador seja a correta
+        if (correct_door == player_door):  # Verifica se a porta do jogador é a correta
             success += 1  # houve sucesso
 
         success_rates.append(success/i)
