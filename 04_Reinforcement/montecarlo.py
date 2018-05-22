@@ -13,11 +13,13 @@ import random as rand
 import matplotlib.pyplot as plt
 
 
-def plot(y):
+def plot(y, img_name):
+    fig = plt.figure()
     plt.plot(y)
     plt.ylabel('Success rate')
     plt.xlabel('Iterations')
-    plt.show()
+    #plt.show()
+    fig.savefig(img_name)
 
 
 def do_not_change(n_doors, trials):  # Caso o jogador não troque a porta
@@ -35,7 +37,7 @@ def do_not_change(n_doors, trials):  # Caso o jogador não troque a porta
 
     print("Sem troca\nNúmero de tentativas:{}\nAcertos:{}\nPorcentagem:{}\n".format(trials, success,
                                                                                        success / trials))
-    plot(success_rates)
+    plot(success_rates, "notchange.png")
 
 
 def do_change(n_doors, trials): # Caso o jogador troque a porta
@@ -70,7 +72,7 @@ def do_change(n_doors, trials): # Caso o jogador troque a porta
 
     print("Com troca\nNúmero de tentativas:{}\nAcertos:{}\nPorcentagem:{}\n".format(trials, success,
                                                                                  success/trials))
-    plot(success_rates)
+    plot(success_rates, "change.png")
 
 
 n_doors = 3  # número de portas
