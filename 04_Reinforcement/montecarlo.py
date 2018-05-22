@@ -14,11 +14,12 @@ import matplotlib.pyplot as plt
 
 
 def plot(y, img_name):
-    fig = plt.figure(n)
+    fig = plt.figure()
     plt.plot(y)
     plt.ylabel('Success rate')
     plt.xlabel('Iterations')
-    #plt.show()
+    plt.title(img_name[:-4])
+    plt.show()
     fig.savefig(img_name)
 
 
@@ -33,15 +34,14 @@ def do_not_change(n_doors, trials):  # Caso o jogador não troque a porta
         if (correct_door == player_door):  # Caso o a porta do jogador seja a correta
             success += 1
 
-        success_rates.append(success/i)
+        success_rates.append(success/i)  # Adiciona a taxa de acertos atual à lista
 
-    print("Sem troca\nNúmero de tentativas:{}\nAcertos:{}\nPorcentagem:{}\n".format(trials, success,
-                                                                                       success / trials))
+    print("Política: Sem troca\nNúmero de tentativas:{}\nAcertos:{}\nPorcentagem:{}\n".format(trials, success,
+                                                                                       success/trials))
     plot(success_rates, "notchange.png")
 
 
-def do_change(n_doors, trials): # Caso o jogador troque a porta
-    rating = 0
+def do_change(n_doors, trials):  # Caso o jogador troque a porta
     success = 0
     success_rates = []
 
@@ -68,15 +68,15 @@ def do_change(n_doors, trials): # Caso o jogador troque a porta
         if (correct_door == player_door):  # Verifica se a porta do jogador é a correta
             success += 1  # houve sucesso
 
-        success_rates.append(success/i)
+        success_rates.append(success/i)  # Adiciona a taxa de acertos atual à lista
 
-    print("Com troca\nNúmero de tentativas:{}\nAcertos:{}\nPorcentagem:{}\n".format(trials, success,
+    print("Política: Com troca\nNúmero de tentativas:{}\nAcertos:{}\nPorcentagem:{}\n".format(trials, success,
                                                                                  success/trials))
     plot(success_rates, "change.png")
 
 
-n_doors = 3  # número de portas
-trials = 1000  # número de tentativas
+n_doors = 3  # Número de portas
+trials = 1000  # Número de tentativas
 
 do_not_change(n_doors, trials)
 
