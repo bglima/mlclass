@@ -3,40 +3,79 @@ Created on 21 de mai de 2018
 
 Objetivo: Provar a solução do problema de Monty Hall utilizando Monte Carlo
 
-@author: João Paulo Clarindo
+@authors: Bruno Lima
+          João Paulo Clarindo
+          Nilson Sales
 '''
-from random import randint
-n = 3                                       # numero de portas
-success = 0                                 # quantidade de vezes que o jogador acertou
-trials = 100000                                 # número de tentativas
 
-#Caso o jogador não troque a porta
 
-for i in range (1, trials):
-    correct_door = randint(1,n)
-    player_door = randint(1,n)
-    
-    if (correct_door == player_door):      # Caso o a porta do jogador seja a correta
-        success += 1                       # houve sucesso 
-        
-print("Sem troca\nNúmero de tentativas:{}\nNúmero de acertos:{}\nPorcentagem:{}\n".format(trials,success,success/trials))
+import random as rand
+import matplotlib.pyplot as plt
 
-#Caso o jogador troque a porta
 
-success = 0                                 # quantidade de vezes que o jogador acertou
+def plot(y):
+    plt.plot(y)
+    plt.ylabel('Success rate')
+    plt.xlabel('Iterations')
+    plt.show()
 
-for i in range (1,trials):
-    correct_door = randint(1,n)
-    player_door = randint(1,n)
-    
-    '''
-    A porta que o apresentador abrirá (empty_door) não pode ser nem a porta que
-    o jogador escolheu e nem a porta que está o prêmio. Um número aleatório que
-    não represente as portas para escolha é gerado.
-    '''
-    empty_door = player_door
-    
-    while((empty_door == player_door) or (empty_door == correct_door)):
-        empty_door = randint(1,n)
-    
-    
+
+def do_not_change(n_doors, trials):  # Caso o jogador não troque a porta
+    success = 0
+    success_rates = []
+
+    for i in range(1, trials):
+        correct_door = rand.randint(1, n_doors)
+        player_door = rand.randint(1, n_doors)
+
+        if (correct_door == player_door):  # Caso o a porta do jogador seja a correta
+            success += 1
+
+        success_rates.append(success/i)
+
+    print("Sem troca\nNúmero de tentativas:{}\nAcertos:{}\nPorcentagem:{}\n".format(trials, success,
+                                                                                       success / trials))
+    plot(success_rates)
+
+
+def do_change(n_doors, trials): # Caso o jogador troque a porta
+    rating = 0
+    success = 0
+    success_rates = []
+
+    for i in range(1, trials):
+
+        correct_door = rand.randint(1, n_doors)
+        player_door = rand.randint(1, n_doors)
+
+        # Criando lista com as outras portas pra abrir uma
+        other_doors = list(range(1, n_doors+1))
+        other_doors.remove(player_door)
+
+        # Abre outra(s) porta(s) e deixa uma fechada
+        # Se a porta do jogador for a correta, escolha uma porta aleatória pra trocar
+        if player_door == correct_door:
+            keep_closed = rand.choice(other_doors)
+        # Se não, abre todas e deixa a correta
+        else:
+            keep_closed = correct_door
+
+        # Troca a escolha
+        player_door = keep_closed
+
+        if (correct_door == player_door):  # Caso o a porta do jogador seja a correta
+            success += 1  # houve sucesso
+
+        success_rates.append(success/i)
+
+    print("Com troca\nNúmero de tentativas:{}\nAcertos:{}\nPorcentagem:{}\n".format(trials, success,
+                                                                                 success/trials))
+    plot(success_rates)
+
+
+n_doors = 3  # número de portas
+trials = 1000  # número de tentativas
+
+do_not_change(n_doors, trials)
+
+do_change(n_doors, trials)
