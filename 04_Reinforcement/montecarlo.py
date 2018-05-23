@@ -24,7 +24,7 @@ def init_doors(n_doors):
     player_door = rand.randint(1, n_doors)
     return (correct_door, player_door)
 
-# Deixa apenas duas portas abertas: a inicial do jogador e mais uma. Uma delas deve conter o prêmio
+# Deixa apenas duas portas fechadas: a inicial do jogador e mais uma. Uma delas deve conter o prêmio
 def open_doors(player_door, correct_door, n_doors):
         # Criando lista com as outras portas disponíveis
         other_doors = list(range(1, n_doors+1))
