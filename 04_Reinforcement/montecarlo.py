@@ -74,10 +74,14 @@ def evaluate_policy_dt( policy, n_doors, trials ):
         # Execute a ação definida na política
         if policy == 'ALWAYS_CHANGE':
             (player_door, keep_closed) = change_doors(player_door, keep_closed, True)      
-        elif policy == 'NEVER_CHANGE':            
-            (player_door, keep_closed) = change_doors(player_door, keep_closed, False)
         elif policy == 'CHANGE_EACH_2':
             (player_door, keep_closed) = alternate_each_n(player_door, keep_closed, 2, i)
+        elif policy == 'CHANGE_EACH_5':
+            (player_door, keep_closed) = alternate_each_n(player_door, keep_closed, 5, i)    
+        elif policy == 'CHANGE_EACH_10':
+            (player_door, keep_closed) = alternate_each_n(player_door, keep_closed, 10, i)  
+        elif policy == 'NEVER_CHANGE':            
+            (player_door, keep_closed) = change_doors(player_door, keep_closed, False)
         elif policy == 'RANDOM_POLICY':
             (player_door, keep_closed) = change_random(current_door, another_door)
         else:
@@ -101,7 +105,7 @@ def main():
     n_doors = 3     # Número de portas
     trials = 10000  # Número de tentativas
 
-    policies = ['ALWAYS_CHANGE', 'NEVER_CHANGE', 'CHANGE_EACH_2', 'RANDOM_POLICY']
+    policies = ['ALWAYS_CHANGE','CHANGE_EACH_2', 'CHANGE_EACH_5', 'CHANGE_EACH_10', 'NEVER_CHANGE', 'RANDOM_POLICY']
 
     fig = plt.figure(figsize=(8, 6))
     ax = plt.subplot(111)
