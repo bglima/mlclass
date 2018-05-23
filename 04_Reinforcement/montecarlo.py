@@ -114,7 +114,7 @@ def main():
     
     for policy in policies:
         (success, V_list) = evaluate_policy_dt( policy, n_doors, trials )
-        print("Política: ", policy, "\nNúmero de tentativas:{}\nAcertos:{}\nPorcentagem:{}\n".format(trials, success, V_list[-1]))
+        print("Política: ", policy, "\nNúmero de tentativas:{}\nAcertos:{}\nPorcentagem:{}\n".format(trials, success, round(V_list[-1],3)))
         plot(V_list, policy, fig)
 
         if(success > best_policy["success"]):
