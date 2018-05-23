@@ -45,6 +45,14 @@ def change_doors(current_door, another_door, change=True):
     else:
         return (current_door, another_door)
 
+# Política aleatória
+def change_random(current_door, another_door):
+    change = rand.randint(0, 1)
+    if ( change ):
+        return (another_door, current_door)
+    else:
+        return (current_door, another_door)
+
 # Política de alternar (OPEN_EVERY_N_TRIALS)
 def alternate_each_n(player_door, another_door, each_n, trial_index):
     if trial_index % each_n == 0:
@@ -70,6 +78,8 @@ def evaluate_policy_dt( policy, n_doors, trials ):
             (player_door, keep_closed) = change_doors(player_door, keep_closed, False)
         elif policy == 'CHANGE_EACH_2':
             (player_door, keep_closed) = alternate_each_n(player_door, keep_closed, 2, i)
+        elif policy == 'RANDOM_POLICY':
+            (player_door, keep_closed) = change_random(current_door, another_door)
         else:
             print('Policy not known... Please choose a valid one!\n')
             return -1
@@ -91,9 +101,9 @@ def main():
     n_doors = 3     # Número de portas
     trials = 10000  # Número de tentativas
 
-    policies = ['ALWAYS_CHANGE', 'NEVER_CHANGE', 'CHANGE_EACH_2']
+    policies = ['ALWAYS_CHANGE', 'NEVER_CHANGE', 'CHANGE_EACH_2', 'RANDOM_POLICY']
 
-    fig = plt.figure(figsize=(8, 8))
+    fig = plt.figure(figsize=(8, 6))
     ax = plt.subplot(111)
     
     for policy in policies:
