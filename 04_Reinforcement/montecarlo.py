@@ -100,20 +100,21 @@ def evaluate_policy_dt( policy, n_doors, trials ):
         V_policy_list.append(V_policy_last)
 
     return (success, V_policy_list)
-    
+
+
 def main():
     n_doors = 3     # Número de portas
     trials = 10000  # Número de tentativas
     best_policy = {"name": "",
                    "success": 0}
 
-    policies = ['ALWAYS_CHANGE', 'CHANGE_EVERY_2', 'CHANGE_EVERY_5', 'CHANGE_EVERY_10', 'NEVER_CHANGE', 'RANDOM_POLICY']
+    policies = ['ALWAYS_CHANGE', 'CHANGE_EVERY_2', 'CHANGE_EVERY_10', 'NEVER_CHANGE', 'RANDOM_POLICY']
 
     fig = plt.figure(figsize=(8, 6))
     ax = plt.subplot(111)
     
     for policy in policies:
-        (success, V_list) = evaluate_policy_dt( policy, n_doors, trials )
+        (success, V_list) = evaluate_policy_dt(policy, n_doors, trials)
         print("Política: ", policy, "\nNúmero de tentativas:{}\nAcertos:{}\nPorcentagem:{}\n".format(trials, success, round(V_list[-1],3)))
         plot(V_list, policy, fig)
 
