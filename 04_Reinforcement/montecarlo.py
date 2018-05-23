@@ -104,7 +104,8 @@ def evaluate_policy_dt( policy, n_doors, trials ):
 def main():
     n_doors = 3     # Número de portas
     trials = 10000  # Número de tentativas
-    highest_success = 0
+    best_policy = {"name": "",
+                   "success": 0}
 
     policies = ['ALWAYS_CHANGE', 'CHANGE_EVERY_2', 'CHANGE_EVERY_5', 'CHANGE_EVERY_10', 'NEVER_CHANGE', 'RANDOM_POLICY']
 
@@ -116,11 +117,11 @@ def main():
         print("Política: ", policy, "\nNúmero de tentativas:{}\nAcertos:{}\nPorcentagem:{}\n".format(trials, success, V_list[-1]))
         plot(V_list, policy, fig)
 
-        if(success > highest_success):
-            highest_success = success
-            best_policy = policy
+        if(success > best_policy["success"]):
+            best_policy["success"] = success
+            best_policy["name"] = policy
 
-    print("The best policy is: ", best_policy)
+    print("The best policy is: ", best_policy["name"])
     
     ax.legend(loc='lower center')
     plt.show()
