@@ -11,7 +11,12 @@ Objetivo: Provar a solução do problema de Monty Hall utilizando Monte Carlo
 
 import random as rand
 import matplotlib.pyplot as plt
+import optparse
 
+# Valores Padrões
+default_n_doors = 3
+default_trials = 10000
+default_changes = [2,10]
 # Plota os valores de y na imagem img_name
 def plot(y, name, fig, n_doors):
     plt.plot(y, label=name)
@@ -19,12 +24,37 @@ def plot(y, name, fig, n_doors):
     plt.xlabel('Iterations')
     title = "Monty Hall problem with " + str(n_doors) + " doors"
     plt.title(title)
-  
+    
+# Parser. Trem três opções disponíveis. Caso o usuário não adicione as opções, valores padrões serão usados
+def init_parser():
+    parser = optparse.OptionParser("Uso: %prog [options]")
+    parser.add_option("-d", "--doors", dest="n_doors", 
+                      default=default_n_doors, type="int", help="Número de portas a serem avaliadas")
+    parser.add_option("-t", "--trials", dest="trials", 
+                      default=default_trials, type="int", help="Número de cenários")
+    parser.add_option("-c", "--changes", dest="changes", 
+                      default=default_changes, type="int", action="append", help="Número de mudanças adicionais para alternâncias")
+    
+    options = parser.parse_args()[0]
+        
+    return (options.n_doors, options.trials, options.changes)
+
 # Inicializa as portas. Retorna um array com as portas e o índice da porta correta
 def init_doors(n_doors):
     correct_door = rand.randint(1, n_doors)
     player_door = rand.randint(1, n_doors)
     return (correct_door, player_door)
+
+# Inicializa a lista de políticas. Para os casos de alternância, adiciona cada mudança à lista
+def init_policies(changes):
+    policies = ['ALWAYS_CHANGE', 'NEVER_CHANGE', 'RANDOM_POLICY']
+       
+    if len(changes) == 0:
+        return policies 
+    else:
+        for change in changes:
+            policies.append('CHANGE_EVERY_' + str(change))
+        return policies
 
 # Deixa apenas duas portas fechadas: a inicial do jogador e mais uma. Uma delas deve conter o prêmio
 def open_doors(player_door, correct_door, n_doors):
@@ -34,7 +64,10 @@ def open_doors(player_door, correct_door, n_doors):
         # Abre outra(s) porta(s) e deixa uma fechada
         # Se a porta do jogador for a correta, oferece uma porta aleatória pra trocar
         if player_door == correct_door:
-            keep_closed = rand.choice(other_doors)
+            try:
+                keep_closed = rand.choice(other_doors)
+            except:
+                print('Número de portas insuficiente para o problema')
         # Se não, abre todas e deixa a correta
         else:
             keep_closed = correct_door
@@ -75,17 +108,14 @@ def evaluate_policy_dt( policy, n_doors, trials ):
         montys_door = open_doors(player_door, correct_door, n_doors)
         
         # Execute a ação definida na política
-        if policy == 'ALWAYS_CHANGE':
+        if 'ALWAYS_CHANGE' in policy:
             (player_door, montys_door) = change_doors(player_door, montys_door, True)
-        elif policy == 'CHANGE_EVERY_2':
-            (player_door, montys_door) = alternate_each_n(player_door, montys_door, 2, i)
-        elif policy == 'CHANGE_EVERY_5':
-            (player_door, montys_door) = alternate_each_n(player_door, montys_door, 5, i)
-        elif policy == 'CHANGE_EVERY_10':
-            (player_door, montys_door) = alternate_each_n(player_door, montys_door, 10, i)
-        elif policy == 'NEVER_CHANGE':            
+        elif 'CHANGE_EVERY_' in policy:
+            change = int(policy.split('_')[2])
+            (player_door, montys_door) = alternate_each_n(player_door, montys_door, change, i)
+        elif 'NEVER_CHANGE' in policy:            
             (player_door, montys_door) = change_doors(player_door, montys_door, False)
-        elif policy == 'RANDOM_POLICY':
+        elif 'RANDOM_POLICY' in policy:
             (player_door, montys_door) = change_random(player_door, montys_door)
         else:
             print('Unknown policy... :( Please choose a valid one!\n')
@@ -105,13 +135,14 @@ def evaluate_policy_dt( policy, n_doors, trials ):
     return (success, V_policy_list)
 
 
-def main():
-    n_doors = 3     # Número de portas
-    trials = 10000  # Número de tentativas
+def main():    
+        
+    (n_doors,trials,changes) = init_parser()
+
     best_policy = {"name": "",
                    "success": 0}
-
-    policies = ['ALWAYS_CHANGE', 'CHANGE_EVERY_2', 'CHANGE_EVERY_10', 'NEVER_CHANGE', 'RANDOM_POLICY']
+   
+    policies = init_policies(changes)
 
     fig = plt.figure(figsize=(8, 6))
     ax = plt.subplot(111)
