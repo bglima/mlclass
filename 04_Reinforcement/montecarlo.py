@@ -13,10 +13,12 @@ import random as rand
 import matplotlib.pyplot as plt
 
 # Plota os valores de y na imagem img_name
-def plot(y, name, fig):
+def plot(y, name, fig, n_doors):
     plt.plot(y, label=name)
     plt.ylabel('Success rate')
     plt.xlabel('Iterations')
+    title = "Monty Hall problem with " + str(n_doors) + " doors"
+    plt.title(title)
   
 # Inicializa as portas. Retorna um array com as portas e o índice da porta correta
 def init_doors(n_doors):
@@ -28,6 +30,7 @@ def init_doors(n_doors):
 def open_doors(player_door, correct_door, n_doors):
         # Criando lista com as outras portas disponíveis
         other_doors = list(range(1, n_doors+1))
+        other_doors.remove(player_door)
         # Abre outra(s) porta(s) e deixa uma fechada
         # Se a porta do jogador for a correta, oferece uma porta aleatória pra trocar
         if player_door == correct_door:
@@ -116,7 +119,7 @@ def main():
     for policy in policies:
         (success, V_list) = evaluate_policy_dt(policy, n_doors, trials)
         print("Política: ", policy, "\nNúmero de tentativas:{}\nAcertos:{}\nPorcentagem:{}\n".format(trials, success, round(V_list[-1],3)))
-        plot(V_list, policy, fig)
+        plot(V_list, policy, fig, n_doors)
 
         if(success > best_policy["success"]):
             best_policy["success"] = success
