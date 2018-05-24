@@ -12,11 +12,22 @@ Objetivo: Provar a solução do problema de Monty Hall utilizando Monte Carlo
 import random as rand
 import matplotlib.pyplot as plt
 import optparse
+import time
+import datetime
 
 # Valores Padrões
 default_n_doors = 3
 default_trials = 10000
-default_changes = [2,10]
+default_changes = [2, 10]
+
+
+# Retorna um nome de arquivo único usando o timestamp
+def generate_filename():
+    ts = time.time()
+    st = datetime.datetime.fromtimestamp(ts).strftime('%Y-%m-%d %H:%M:%S')
+    return ('V_plot_' + st + '.png')
+
+
 # Plota os valores de y na imagem img_name
 def plot(y, name, fig, n_doors):
     plt.plot(y, label=name)
@@ -24,7 +35,8 @@ def plot(y, name, fig, n_doors):
     plt.xlabel('Iterations')
     title = "Monty Hall problem with " + str(n_doors) + " doors"
     plt.title(title)
-    
+
+
 # Parser. Trem três opções disponíveis. Caso o usuário não adicione as opções, valores padrões serão usados
 def init_parser():
     parser = optparse.OptionParser("Uso: %prog [options]")
@@ -39,11 +51,13 @@ def init_parser():
         
     return (options.n_doors, options.trials, options.changes)
 
+
 # Inicializa as portas. Retorna um array com as portas e o índice da porta correta
 def init_doors(n_doors):
     correct_door = rand.randint(1, n_doors)
     player_door = rand.randint(1, n_doors)
     return (correct_door, player_door)
+
 
 # Inicializa a lista de políticas. Para os casos de alternância, adiciona cada mudança à lista
 def init_policies(changes):
@@ -55,6 +69,7 @@ def init_policies(changes):
         for change in changes:
             policies.append('CHANGE_EVERY_' + str(change))
         return policies
+
 
 # Deixa apenas duas portas fechadas: a inicial do jogador e mais uma. Uma delas deve conter o prêmio
 def open_doors(player_door, correct_door, n_doors):
@@ -74,12 +89,14 @@ def open_doors(player_door, correct_door, n_doors):
         
         return keep_closed
 
+
 # Executa a ação de trocar a porta do jogador ou permanecer com a inicial
 def change_doors(current_door, another_door, change=True):
     if ( change ):
         return (another_door, current_door)
     else:
         return (current_door, another_door)
+
 
 # Política aleatória
 def change_random(current_door, another_door):
@@ -89,12 +106,14 @@ def change_random(current_door, another_door):
     else:
         return (current_door, another_door)
 
+
 # Política de alternar (OPEN_EVERY_N_TRIALS)
 def alternate_each_n(player_door, another_door, each_n, trial_index):
     if trial_index % each_n == 0:
         return (another_door, player_door)
     else:
         return (player_door, another_door)
+
 
 #  Avalie a política passada como parâmetro
 def evaluate_policy_dt( policy, n_doors, trials ):
@@ -137,7 +156,7 @@ def evaluate_policy_dt( policy, n_doors, trials ):
 
 def main():    
         
-    (n_doors,trials,changes) = init_parser()
+    (n_doors, trials, changes) = init_parser()
 
     best_policy = {"name": "",
                    "success": 0}
@@ -160,10 +179,10 @@ def main():
     
     ax.legend(loc='lower center')
     plt.show()
-    fig.savefig('V_plot.png')
+
+    filename = generate_filename()
+    fig.savefig(filename)
 
 
 if __name__ == '__main__':
     main()
-
-
