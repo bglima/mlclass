@@ -1,5 +1,7 @@
 ## Resolução do Problema de Monty Hall utilizando Monte Carlo
 
+![Plot](V_plot_2018-05-25 18:15:30.png)
+
 ### Descrição do Problema
 
 Este é um problema clássico criado por um programa de TV americano chamado "Let's Make a Deal", inicialmente apresentado por Monty Hall.
@@ -35,4 +37,4 @@ Implementamos o programa para um número D de portas, customizável pelo usuári
 
  ### Exemplo de execução
 
- ```python3 montecarlo.py --doors 4 --trials 10000```
+ ```python3 montecarlo.py --doors 3 --trials 10000```
