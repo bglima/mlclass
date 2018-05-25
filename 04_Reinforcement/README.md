@@ -1,6 +1,6 @@
 ## Resolução do Problema de Monty Hall utilizando Monte Carlo
 
-![Plot](V_plot_2018-05-25 18:15:30.png)
+![Plot](https://raw.githubusercontent.com/bglima/mlclass/master/04_Reinforcement/V_plot_2018-05-25%2018%3A15%3A30.png)
 
 ### Descrição do Problema
 
