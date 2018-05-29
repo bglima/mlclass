@@ -39,4 +39,4 @@ Implementamos o programa para um número D de portas, customizável pelo usuári
 
  ### Exemplo de execução
 
- ```python3 montecarlo.py --doors 3 --trials 100000 --alpha 0.05```
+ ```python3 choose_at_runtime.py --doors 3 --trials 100000 --alpha 0.05```
