@@ -175,7 +175,7 @@ def main():
 
         # Se a melhor política mudar, avise ao usuário
         if best_policy != last_best_policy:
-            print("The best policy changed in event ", trial_number, "and now is: ", best_policy, " with V equal to ", best_policy_value)
+            print("The best policy changed in event ", trial_number, "and now it is: ", best_policy, " with V equal to ", best_policy_value)
             last_best_policy = best_policy
             last_best_policy_value = last_best_policy_value
 

@@ -37,4 +37,4 @@ Implementamos o programa para um número D de portas, customizável pelo usuári
 
  ### Exemplo de execução
 
- ```python3 montecarlo.py --doors 3 --trials 10000```
+ ```python3 montecarlo.py --doors 3 --trials 100000 --alpha 0.05```
