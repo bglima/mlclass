@@ -155,7 +155,7 @@ def main():
     V_points = {}   # Inicializa a lista de pontos a serem plotados
 
     for policy in policies:
-        V_policy[policy] = rand.random() # Inicia os Vs aleatoriamente entre 0 e 1
+        V_policy[policy] = 1 # Inicia os Vs aleatoriamente entre 0 e 1
         V_points[policy] = []
 
     # Escolhe a melhor política apartir dos Vs aleatórios definidos anteriormente
@@ -184,7 +184,7 @@ def main():
             V_points[policy].append( V_policy[policy] )
 
     # Mostra o resultado final
-    print('The best policy in event ', trials, ' is: ', last_best_policy, ' with V equal to ', last_best_policy_value)
+    print('The best policy in event ', trials, ' is: ', last_best_policy, ' with V equal to ', V_policy[last_best_policy])
 
     # Plota e salva o gráfico
     for policy in policies:

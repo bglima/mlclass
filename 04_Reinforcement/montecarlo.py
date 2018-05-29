@@ -150,7 +150,6 @@ def evaluate_policy_dt( policy, n_doors, trials ):
 
     return (success, V_policy_list)
 
-
 def main():
 
     (n_doors, trials) = init_parser()
