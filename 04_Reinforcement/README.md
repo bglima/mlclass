@@ -31,7 +31,9 @@ Implementamos o programa para um número D de portas, customizável pelo usuári
 
  ```-d``` ou ```--door``` : Número de portas no problema. O padrão é 3 portas.
 
- ```-t``` ou ```--trials``` : Número de episódios a serem explorados. O padrão é 5000 episódios.
+ ```-t``` ou ```--trials``` : Número de episódios a serem explorados. O padrão é 100000 episódios.
+ 
+ ```-a``` ou ```--alpha```: Taxa de aprendizagem usada para a atualização da dos valores da função-valor. Padrão é 0.05.
 
  ```-h``` ou ```--help```: Exibe a ajuda.
 
